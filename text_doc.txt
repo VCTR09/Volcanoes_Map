@@ -1,42 +1,49 @@
-Данное приложение создано с использованием языка Python и библиотеки Folium.
+Данное приложение создано на языке Python с использованием библиотеки Folium.
 Так же используется библиотека Pandas.
 
-В приложении 3 слоя: 1-й слой это basemap, сами очертания стран и континентов, 2-й слой это polygon layer, 
-где цвет указывает на количество населения в той или иной стране, 3-й слой point layer с точками на карте 
-указывающими местоположение вулканов. Карта интерактивная - слои можно включать или выключать.
+В приложении 3 слоя: 1-й слой это basemap, очертания стран и континентов, 2-й слой это polygon layer, 
+где цвет указывает на количество населения в той или иной стране, 3-й слой это point layer с точками на карте, 
+указывающими местоположение вулканов. Карта интерактивная - слои можно включать или выключать при помощи панели.
 
 Так же присутствуют всплывающие окна с названиями вулканов, их высотой и кликабельными 
 ссылками на них в Google.
 
+Вулканы отмечены разными цветами (зеленый, желтый и красный) в зависимости от высоты.
 
 Создание:
 
 1. Импортируем Folium и создаем объект map класса Map с тремя параметрами (map = folium.Map). стр.25
-- location (широта, долгота) - можно выбрать где будет открыта наша карта, 
+- location (широта, долгота) - выбираем где будет открыта наша карта, 
 - zoom_start - выбираем стартовое приближение,
-- tiles - ответсвенен за сам внешний вид 1-го слоя
-* Сохраняем нашу карту в формате html   map.save("Map_html_popup_advanced.html")   стр.43
+- tiles - ответсвенен за внешний вид 1-го слоя.
+* Сохраняем карту в формате html   map.save("Map_html_popup_advanced.html")   стр.43
+
 
 2. Добавляем точки на карту.
 * Создаем FeatureGroup    fgv = folium.FeatureGroup(name="Volcanoes")   стр.26
 FeatureGroup позволяет добавить множество особенностей (features), таких как: Marker, CircleMarker, GeoJson layer, итд.
+FeatureGroup это контейнер для объектов. Все объекты на нашей карте будут помещены в FeatureGroup, так их будет проще 
+показать или скрыть разом по выбору.
 * Используем метод add_child для добавления объекта (точек) к существующему объекту (карта).  стр.30
 * Используем объект CircleMarker с аргументами (положение, цвет, прозрачность, и т.д.) библиотеки Folium 
 для создания точек на карте.
-!! CircleMarker позволяет создавать всплывающие окна при нажатии на точку на карте.
+! CircleMarker позволяет создавать всплывающие окна при нажатии на точку на карте.
 * Делаем    map.add_child(fgv)   стр.39
 
+
 3. Добавляем координаты всех вулканов из Volcanoes.txt на карту в виде точек.
-* Импортируем библиотеку pandas     data = pandas.read_csv("Volcanoes.txt") стр.4
+* Импортируем библиотеку pandas    data = pandas.read_csv("Volcanoes.txt") стр.4
 * Используем цикл for для итерации через структуру данных (dataframe). 
 Для этого создаем 2 списка: lat & lon (работа со списком проще и быстрее, чем с dataframe series). стр. 5, 6
 * Производим итерации цикла for, каждый раз извлекая широту и долготу каждго из вулканов.
-for lt, ln in zip(lat, lon):   стр.28
-!! Функция zip нужна для итерации через 2 списка одновременно.
+for lt, ln in zip(lat, lon):  стр.28
+! Функция zip нужна для итерации через 2 списка одновременно.
+
 
 4. Создаем динамические всплывающие окна (popup windows)
 * Создаем 2 дополнительных списка elev & name - высота и названия вулканов.  стр. 7,8
 * Итерируем через все 4 списка   for lt, ln, el, name in zip(lat, lon, elev, name):  
+
 
 5. Применим HTML для всплывающих окон, а так же Google ссылки.
 * Разместим ссылки во всплывающем окне. Приведенный ниже код создаст всплывающее окно с названием 
@@ -46,13 +53,59 @@ Volcano name:<br>
 <a href="https://www.google.com/search?q=%%22%s%%22" target="_blank">%s</a><br>
 Height: %s m
 """
-!! Символы %s являются заполнителями, в которые будут вставлены строковые переменные.
-!! Здесь строковые переменные name и el вставляются в переменную html:
+!! Символы %s являются заполнителями, в которые будут вставлены переменные класса str.
+!! Здесь str. переменные name и el вставляются в переменную html:
 iframe = folium.IFrame(html=html % (name, name, el)   стр.29
 
 * Так выглядит теперь цикл for:  
 for lt, ln, el, name in zip(lat, lon, elev, name):
     iframe = folium.IFrame(html=html % (name, name, el), width=200, height=100)
-    fgv.add_child(folium.CircleMarker(location=[lt, ln], radius=6, popup=folium.Popup(iframe), fill_color=color_producer(el), color='grey', fill_opacity=0.7))
+    fg.add_child(folium.Marker(location=[lt, ln], popup=folium.Popup(iframe), icon = folium.Icon(color = "green")))
 
 
+6. Стилизация маркеров по цвету в зависимости от высоты.
+* Так как в библиотеке Folium отсутствует функционал для создания динамических маркеров, мы используем встроенный функционал Pyhton.
+* Создадим функцию которая будет возвращать разные цвета в зависимости от высоты.
+def color_producer(elevation):
+    if elevation < 1000:
+        return 'green'
+    elif 1000 <= elevation < 3000:
+        return 'orange'
+    else:
+        return 'red'
+
+* Теперь добавим функцию color_producer в цикл. 
+for lt, ln, el in zip(lat, lon, elev):
+    iframe = folium.IFrame(html=html % str(el), width=200, height=100)
+    fg.add_child(folium.Marker(location=[lt, ln], popup=folium.Popup(iframe), icon = folium.Icon(color=color_producer(el))))
+
+* Изменим внешиний вид точек, показывающих вулканы на карте.
+Можно использовать dir(folium) для поиска метода создания круглых маркеров.
+После того как нужный метод найден, воспользуемся функцией help для поиска аргументов, 
+которые передадим методу для стилизации маркеров.
+fgv.add_child(folium.CircleMarker(location=[lt, ln], radius=6, popup=folium.Popup(iframe), fill_color=color_producer(el), color='grey', fill_opacity=0.7))
+
+
+7. Добавление нового слоя на карту.
+* В данный момент у нас 2 слоя: базовый слой и слой с маркерами. Добавим слой, отражающий количество населения в разных странах.
+* Создадим новую FeatureGroup  fgp = folium.FeatureGroup(name="Population")  и добавим к ней child   fgp.add_child
+* Добавим polygon layer с помощью метода GeoJson: folium.GeoJson    стр.34
+* Данные для GeoJson возьмем из файла world.json
+! Не открывайте world.json через atom, если не уверены, что ваш компьютер это вытянет. Используйте редактор "полегче", напр.: Notepad.
+* Задаём атрибут data для метода GeoJson, равный: fgp.add_child(folium.GeoJson(data=open('world.json', 'r', encoding='utf-8-sig').read()))
+! метод open нужен для создания файлового объекта Python, далее укажем путь к файлу 'world.json'
+! метод read() в конце нужен так как новые версии Folium принимают строку, вместо файла, в качестве вводных данных
+
+
+8 Разные цвета для стран в зависимости от населения:
+* В файле world.json есть информация о населении каждой из стран, которая хранится в атрибуте "POP2005"
+* Добавим новый аргумент style_function в GeoJson:
+style_function=lambda x: {'fillColor':'green' if x['properties']['POP2005'] < 10000000
+else 'orange' if 10000000 <= x['properties']['POP2005'] < 20000000 else 'red'}))
+! x['properties']['POP2005']  'properties'  это ключ, 'POP2005' его значение в словаре в файле world.json, 
+а x означает 'features' в том же файле.
+
+
+9. Добавим панель переключения слоев:
+* Используем класс LayerControl, модуля folium
+map.add_child(folium.LayerControl())

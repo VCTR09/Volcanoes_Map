@@ -1,23 +1,25 @@
 # Карта вулканов на территории США
-###### На примере файла map2.py
+#### На примере файла map2.py
 
-Данное приложение создано на языке Python с использованием библиотеки Folium.
-Так же используется библиотека Pandas.
+Данное приложение создано на языке _Python_ с использованием библиотеки _Folium_.
+Так же используется библиотека _Pandas_.
 
-В приложении 3 слоя: 1-й слой это basemap, очертания стран и континентов, 2-й слой это polygon layer, 
-где цвет указывает на количество населения в той или иной стране, 3-й слой это point layer с точками на карте, указывающими местоположение вулканов. Карта интерактивная - слои можно включать или выключать при помощи панели.
+В приложении 3 слоя: 1-й слой это _basemap_, очертания стран и континентов, 2-й слой это _polygon layer_, 
+где цвет указывает на количество населения в той или иной стране, 3-й слой это _point layer_ с точками на карте, указывающими местоположение вулканов. Карта интерактивная - слои можно включать или выключать при помощи панели.
 
 Так же присутствуют всплывающие окна с названиями вулканов, их высотой и кликабельными 
-ссылками на них в Google.
+ссылками на них в _Google_.
 
 Вулканы отмечены разными цветами (зеленый, желтый и красный) в зависимости от высоты.
 
 ## Создание:
 
 ### 1. Импортируем _Folium_ и создаем объект _map_ класса _Map_ с тремя параметрами (map = folium.Map). стр.25
+```
 1.1 location (широта, долгота) - выбираем где будет открыта наша карта, 
 1.2 zoom_start - выбираем стартовое приближение,
 1.3 tiles - ответсвенен за внешний вид 1-го слоя.
+```
 * Сохраняем карту (map.save) в формате html
 __("Map_html_popup_advanced.html")__   _стр.43_
 
@@ -25,8 +27,7 @@ __("Map_html_popup_advanced.html")__   _стр.43_
 * Создадем _FeatureGroup_ 
 __fgv = folium.FeatureGroup(name="Volcanoes")__  _стр.26_
 ! _FeatureGroup_ позволяет добавить множество особенностей (features), таких как: _Marker_, _CircleMarker_, _GeoJson layer_, итд.
-! _FeatureGroup_ это контейнер для объектов. Все объекты на нашей карте будут помещены в __FeatureGroup, так их будет проще 
-показать или скрыть разом по выбору.
+! _FeatureGroup_ это контейнер для объектов. Все объекты на нашей карте будут помещены в __FeatureGroup, так их будет проще показать или скрыть разом по выбору.
 * Используем метод _add_child_ для добавления объекта (точек) к существующему объекту (map). _стр.30_
 * Используем объект _CircleMarker_ с аргументами (положение, цвет, прозрачность, и т.д.) библиотеки _Folium_ для создания точек на карте.
 ! _CircleMarker_ позволяет создавать всплывающие окна при нажатии на точку на карте.
@@ -38,9 +39,11 @@ __fgv = folium.FeatureGroup(name="Volcanoes")__  _стр.26_
 __data = pandas.read_csv("Volcanoes.txt")__ _стр.4_
 * Используем цикл _for_ для итерации через структуру данных (dataframe). 
 Для этого создаем 2 списка: _lat & lon_ (работа со списком проще и быстрее, чем с dataframe series). _стр. 5, 6_
-__data = pandas.read_csv("Volcanoes.txt")__
-__lat = list(data["LAT"])__
-__lon = list(data["LON"])__
+```
+data = pandas.read_csv("Volcanoes.txt")
+lat = list(data["LAT"])
+lon = list(data["LON"])
+```
 * Производим итерации цикла _for_, каждый раз извлекая широту и долготу каждго из вулканов.
 __for lt, ln in zip(lat, lon):__  _стр.28_
 ! Функция _zip_ нужна для итерации через 2 списка одновременно.
@@ -55,42 +58,51 @@ __for lt, ln, el, name in zip(lat, lon, elev, name):__
 ### 5. Применяем HTML для всплывающих окон, а так же Google ссылки.
 * Разместим ссылки во всплывающем окне. Приведенный ниже код создаст всплывающее окно с названием 
 вулкана в качестве ссылки, которая при нажатии выполнит поиск Google для данного конкретного вулкана:
-__html = """
+```
+html = """
 Volcano name:<br>
 <a href="https://www.google.com/search?q=%%22%s%%22" target="_blank">%s</a><br>
 Height: %s m
-"""__
+"""
+```
 !! Символы _%s_ являются заполнителями, в которые будут вставлены переменные класса _str._
 !! В данном примере, _str._ переменные _name_ и _el_ вставляются в переменную _html_:
 __iframe = folium.IFrame(html=html % (name, name, el)__  _стр.29_
 
-* Так выглядит теперь цикл _for_:  
-__for lt, ln, el, name in zip(lat, lon, elev, name):
+* Так выглядит теперь цикл _for_:
+```
+for lt, ln, el, name in zip(lat, lon, elev, name):
     iframe = folium.IFrame(html=html % (name, name, el), width=200, height=100)
-    fg.add_child(folium.Marker(location=[lt, ln], popup=folium.Popup(iframe), icon = folium.Icon(color = "green")))__
-
+    fg.add_child(folium.Marker(location=[lt, ln], popup=folium.Popup(iframe), icon = folium.Icon(color = "green")))
+```
 
 ### 6. Стилизация маркеров по цвету в зависимости от высоты.
 * Так как в библиотеке _Folium_ отсутствует функционал для создания динамических маркеров, мы используем встроенный функционал _Pyhton_.
 * Создадим функцию которая будет возвращать разные цвета в зависимости от высоты.
-__def color_producer(elevation):
+```
+def color_producer(elevation):
     if elevation < 1000:
         return 'green'
     elif 1000 <= elevation < 3000:
         return 'orange'
     else:
-        return 'red'__
+        return 'red'
+```
 
 * Теперь добавим функцию _color_producer_ в цикл _for_. 
-__for lt, ln, el in zip(lat, lon, elev):
+```
+for lt, ln, el in zip(lat, lon, elev):
     iframe = folium.IFrame(html=html % str(el), width=200, height=100)
-    fg.add_child(folium.Marker(location=[lt, ln], popup=folium.Popup(iframe), icon = folium.Icon(color=color_producer(el))))__
+    fg.add_child(folium.Marker(location=[lt, ln], popup=folium.Popup(iframe), icon = folium.Icon(color=color_producer(el))))
+```
 
 * Изменим внешиний вид точек, показывающих вулканы на карте.
 Можно использовать _dir(folium)_ для поиска метода создания круглых маркеров.
 После того как нужный метод найден, воспользуемся функцией _help_ для поиска аргументов, 
 которые передадим методу для стилизации маркеров.
-__fgv.add_child(folium.CircleMarker(location=[lt, ln], radius=6, popup=folium.Popup(iframe), fill_color=color_producer(el), color='grey', fill_opacity=0.7))__
+```
+fgv.add_child(folium.CircleMarker(location=[lt, ln], radius=6, popup=folium.Popup(iframe), fill_color=color_producer(el), color='grey', fill_opacity=0.7))
+```
 
 
 ### 7. Добавление нового слоя на карту.
@@ -100,18 +112,22 @@ __fgp = folium.FeatureGroup(name="Population")__  и добавим к ней _c
 * Добавим _polygon layer_ с помощью метода _GeoJson_: __folium.GeoJson__    _стр.34_
 * Данные для GeoJson возьмем из файла _world.json_
 ! Не открывайте _world.json_ через _Atom_, если не уверены, что ваш компьютер это потянет. Используйте редактор "полегче", напр.: _Notepad_.
-* Задаём атрибут _data_ для метода _GeoJson_, равный: 
-__fgp.add_child(folium.GeoJson(data=open('world.json', 'r', encoding='utf-8-sig').read()))__
-! Метод _open_ нужен для создания файлового объекта Python, далее укажем путь к файлу _'world.json'_.
-! Метод _read()_ в конце нужен так как новые версии _Folium_ принимают строку, вместо файла, в качестве вводных данных.
+* Задаём атрибут ___data___ для метода ___GeoJson___, равный:
+```
+fgp.add_child(folium.GeoJson(data=open('world.json', 'r', encoding='utf-8-sig').read()))
+```
+! Метод ___open___ нужен для создания файлового объекта Python, далее укажем путь к файлу _'world.json'_.
+! Метод ___read()___ в конце нужен так как новые версии _Folium_ принимают строку, вместо файла, в качестве вводных данных.
 
 
 ### 8. Разные цвета для стран в зависимости от населения:
 * В файле _world.json_ есть информация о населении каждой из стран, которая хранится в атрибуте _"POP2005"_
 * Добавим новый аргумент _style_function_ в _GeoJson_:
-__style_function=lambda x: {'fillColor':'green' if x['properties']['POP2005'] < 10000000
-else 'orange' if 10000000 <= x['properties']['POP2005'] < 20000000 else 'red'}))__
-!!! ___x['properties']['POP2005']___  'properties' это ключ, 'POP2005' его значение в словаре в файле _world.json_, 
+```
+style_function=lambda x: {'fillColor':'green' if x['properties']['POP2005'] < 10000000
+else 'orange' if 10000000 <= x['properties']['POP2005'] < 20000000 else 'red'}))
+```
+!! ___x['properties']['POP2005']___  'properties' это ключ, 'POP2005' его значение в словаре в файле _world.json_, 
 а x означает 'features' в том же файле.
 
 

@@ -1,5 +1,13 @@
 # Карта вулканов на территории США
 #### На примере файла map2.py
+<a id ="anchor"></a>
+___
+Содержание:
+
+
+
+
+___
 
 Данное приложение создано на языке _Python_ с использованием библиотеки _Folium_.
 Так же используется библиотека _Pandas_.
@@ -143,8 +151,8 @@ else 'orange' if 10000000 <= x['properties']['POP2005'] < 20000000 else 'red'}))
 
 __map.add_child(folium.LayerControl())__
 
-
-
+[Вверх](#anchor)
+___
 ## Скриншоты
 #### Точки разного цвета обозначают действующие вулканы по высоте.
 ![IMG_1781](https://user-images.githubusercontent.com/97599612/164608734-2e3f926b-7402-484d-83db-6ce5f54bfb2f.JPG)
@@ -157,3 +165,6 @@ __map.add_child(folium.LayerControl())__
 
 #### Код программы (см. файл map2.py)
 ![IMG_1787](https://user-images.githubusercontent.com/97599612/164608836-1117ee05-f9c8-4dc4-8965-6219875fd356.JPG)
+
+
+[Вверх](#anchor)

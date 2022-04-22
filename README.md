@@ -142,3 +142,18 @@ else 'orange' if 10000000 <= x['properties']['POP2005'] < 20000000 else 'red'}))
 * Используем класс _LayerControl_, модуля _folium_
 
 __map.add_child(folium.LayerControl())__
+
+
+
+## Скриншоты
+#### Точки разного цвета обозначают действующие вулканы по высоте.
+![IMG_1781](https://user-images.githubusercontent.com/97599612/164608734-2e3f926b-7402-484d-83db-6ce5f54bfb2f.JPG)
+
+#### Включены оба слоя. Население стран обозначено цветом.
+![IMG_1783](https://user-images.githubusercontent.com/97599612/164608753-410ce948-5677-44c9-98aa-5221a999d291.JPG)
+
+#### Пример всплывающего окна с название вулкана, высотой и кликабельной ссылкой в Google.
+![IMG_1784](https://user-images.githubusercontent.com/97599612/164608813-aea8eb99-a03e-48c0-90ab-aaf1b6f707f7.JPG)
+
+#### Код программы (см. файл map2.py)
+![IMG_1787](https://user-images.githubusercontent.com/97599612/164608836-1117ee05-f9c8-4dc4-8965-6219875fd356.JPG)

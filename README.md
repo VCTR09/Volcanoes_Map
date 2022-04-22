@@ -21,12 +21,11 @@
 1.2 zoom_start - выбираем стартовое приближение,
 1.3 tiles - ответсвенен за внешний вид 1-го слоя.
 ```
-* Сохраняем карту (map.save) в формате html
-__("Map_html_popup_advanced.html")__   _(стр.43)_
-
+* Сохраняем карту (map.save) в формате html  _(стр.43)_
+> _map.save("Map_html_popup_advanced.html")_
 ### 2. Добавляем точки на карту.
-* Создадем _FeatureGroup_ 
-__fgv = folium.FeatureGroup(name="Volcanoes")__  _(стр.26)_
+* Создадем _FeatureGroup_  _(стр.26)_
+> _fgv = folium.FeatureGroup(name="Volcanoes")__
 
 \### _FeatureGroup_ позволяет добавить множество особенностей (features), таких как: _Marker_, _CircleMarker_, _GeoJson layer_, итд.
 

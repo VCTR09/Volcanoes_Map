@@ -177,16 +177,16 @@ ___
 
 ## Скриншоты
 #### Точки разного цвета обозначают действующие вулканы по высоте.
-![IMG_1781](https://user-images.githubusercontent.com/97599612/164608734-2e3f926b-7402-484d-83db-6ce5f54bfb2f.JPG)
+<img width="1440" alt="Map1" src="https://user-images.githubusercontent.com/97599612/168251281-f72afa90-fbf2-4e55-a8e1-132dba23f218.png">
 
 #### Включены оба слоя. Население стран обозначено цветом.
-![IMG_1783](https://user-images.githubusercontent.com/97599612/164608753-410ce948-5677-44c9-98aa-5221a999d291.JPG)
+<img width="1438" alt="Map2" src="https://user-images.githubusercontent.com/97599612/168251294-a22b74fb-faba-4feb-adb9-9a35ab9e4c24.png">
 
 #### Пример всплывающего окна с названием вулкана, высотой и кликабельной ссылкой в Google.
-![IMG_1784](https://user-images.githubusercontent.com/97599612/164608813-aea8eb99-a03e-48c0-90ab-aaf1b6f707f7.JPG)
+<img width="1438" alt="Map3" src="https://user-images.githubusercontent.com/97599612/168251301-b5944c36-4cc2-4c03-8fd9-55686d8c0cb8.png">
 
 #### Код программы (см. файл map2.py)
-![IMG_1787](https://user-images.githubusercontent.com/97599612/164608836-1117ee05-f9c8-4dc4-8965-6219875fd356.JPG)
+<img width="1172" alt="Code1" src="https://user-images.githubusercontent.com/97599612/168251259-aff72f8e-3029-4e2a-9f98-82419772ce2e.png">
 
 
 [Вверх](#anchor)
